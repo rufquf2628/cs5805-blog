@@ -123,8 +123,8 @@ y=\alpha +\beta X
 <p>Let’s think about a simple question. Can we predict someone’s salary based on his years of experience? Assume that you try to find an employee to work on your company and finally see a suitable candidate who already has work experience of 3.5 years. How much salary you need to pay for him?</p>
 <p>Let’s use our simple linear regression model to find the suitable salary for him.</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> pd.read_csv(<span class="st">'./dataset/Salary_Data.csv'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dataset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dataset1 <span class="op">=</span> pd.read_csv(<span class="st">'../dataset/Salary_Data.csv'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dataset1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -295,8 +295,8 @@ y=\alpha +\beta X
 </div>
 </div>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> dataset.iloc[:, :<span class="op">-</span><span class="dv">1</span>].values</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> dataset.iloc[:, <span class="op">-</span><span class="dv">1</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> dataset1.iloc[:, :<span class="op">-</span><span class="dv">1</span>].values</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> dataset1.iloc[:, <span class="op">-</span><span class="dv">1</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we split our dataset into test set and train set. We use sklearn train_test_split to manually split dataset. The size of test set gonna be one third of dataset.</p>
 <div class="cell" data-execution_count="4">
@@ -356,6 +356,547 @@ y=\alpha +\beta X
 </div>
 </div>
 <p>Our regressor model determines to pay him almost 59500 dollar which seems reasonable to both you and him.</p>
+</section>
+</section>
+<section id="multiple-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-linear-regression">2. Multiple Linear Regression</h3>
+<p>Now, let’s move on to the other linear regression model, Multiple Linear Regression.</p>
+<p>Multiple Linear Regression model predicts the relationship between a dependent variable and “two or more” independent variables using a straight line. In the equation below, <span class="math inline">\(y\)</span> is a dependent variable that model gonna predict and <span class="math inline">\(X_1\)</span> ~ <span class="math inline">\(X_n\)</span> are independent variables to make a straight line.</p>
+<p><span class="math display">\[
+y=\alpha +\beta_1 X_1 +\beta_2 X_2 +... + \beta_n X_n
+\]</span></p>
+<p>Let’s move on to the actual example.</p>
+<section id="importing-the-dataset-1" class="level4">
+<h4 class="anchored" data-anchor-id="importing-the-dataset-1">Importing the dataset</h4>
+<p>Since we already implemented libraries previously, we only need to import the dataset. Our dataset for the multiple linear regression model is the profits of 50 startup companies with their strategies of R&amp;D spend, Administration, Marketing spend, and state. By generating a straight line with these dataset, we can predict a new company’s profit with its strategy.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dataset2 <span class="op">=</span> pd.read_csv(<span class="st">'../dataset/50_Startups.csv'</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dataset2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">R&amp;D Spend</th>
+<th data-quarto-table-cell-role="th">Administration</th>
+<th data-quarto-table-cell-role="th">Marketing Spend</th>
+<th data-quarto-table-cell-role="th">State</th>
+<th data-quarto-table-cell-role="th">Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>165349.20</td>
+<td>136897.80</td>
+<td>471784.10</td>
+<td>New York</td>
+<td>192261.83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>162597.70</td>
+<td>151377.59</td>
+<td>443898.53</td>
+<td>California</td>
+<td>191792.06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>153441.51</td>
+<td>101145.55</td>
+<td>407934.54</td>
+<td>Florida</td>
+<td>191050.39</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>144372.41</td>
+<td>118671.85</td>
+<td>383199.62</td>
+<td>New York</td>
+<td>182901.99</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>142107.34</td>
+<td>91391.77</td>
+<td>366168.42</td>
+<td>Florida</td>
+<td>166187.94</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>131876.90</td>
+<td>99814.71</td>
+<td>362861.36</td>
+<td>New York</td>
+<td>156991.12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>134615.46</td>
+<td>147198.87</td>
+<td>127716.82</td>
+<td>California</td>
+<td>156122.51</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>130298.13</td>
+<td>145530.06</td>
+<td>323876.68</td>
+<td>Florida</td>
+<td>155752.60</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>120542.52</td>
+<td>148718.95</td>
+<td>311613.29</td>
+<td>New York</td>
+<td>152211.77</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>123334.88</td>
+<td>108679.17</td>
+<td>304981.62</td>
+<td>California</td>
+<td>149759.96</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>101913.08</td>
+<td>110594.11</td>
+<td>229160.95</td>
+<td>Florida</td>
+<td>146121.95</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>100671.96</td>
+<td>91790.61</td>
+<td>249744.55</td>
+<td>California</td>
+<td>144259.40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>93863.75</td>
+<td>127320.38</td>
+<td>249839.44</td>
+<td>Florida</td>
+<td>141585.52</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>91992.39</td>
+<td>135495.07</td>
+<td>252664.93</td>
+<td>California</td>
+<td>134307.35</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>119943.24</td>
+<td>156547.42</td>
+<td>256512.92</td>
+<td>Florida</td>
+<td>132602.65</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>114523.61</td>
+<td>122616.84</td>
+<td>261776.23</td>
+<td>New York</td>
+<td>129917.04</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>78013.11</td>
+<td>121597.55</td>
+<td>264346.06</td>
+<td>California</td>
+<td>126992.93</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>94657.16</td>
+<td>145077.58</td>
+<td>282574.31</td>
+<td>New York</td>
+<td>125370.37</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>91749.16</td>
+<td>114175.79</td>
+<td>294919.57</td>
+<td>Florida</td>
+<td>124266.90</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>86419.70</td>
+<td>153514.11</td>
+<td>0.00</td>
+<td>New York</td>
+<td>122776.86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>76253.86</td>
+<td>113867.30</td>
+<td>298664.47</td>
+<td>California</td>
+<td>118474.03</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>78389.47</td>
+<td>153773.43</td>
+<td>299737.29</td>
+<td>New York</td>
+<td>111313.02</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>73994.56</td>
+<td>122782.75</td>
+<td>303319.26</td>
+<td>Florida</td>
+<td>110352.25</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>67532.53</td>
+<td>105751.03</td>
+<td>304768.73</td>
+<td>Florida</td>
+<td>108733.99</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>77044.01</td>
+<td>99281.34</td>
+<td>140574.81</td>
+<td>New York</td>
+<td>108552.04</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>64664.71</td>
+<td>139553.16</td>
+<td>137962.62</td>
+<td>California</td>
+<td>107404.34</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>75328.87</td>
+<td>144135.98</td>
+<td>134050.07</td>
+<td>Florida</td>
+<td>105733.54</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">27</td>
+<td>72107.60</td>
+<td>127864.55</td>
+<td>353183.81</td>
+<td>New York</td>
+<td>105008.31</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">28</td>
+<td>66051.52</td>
+<td>182645.56</td>
+<td>118148.20</td>
+<td>Florida</td>
+<td>103282.38</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29</td>
+<td>65605.48</td>
+<td>153032.06</td>
+<td>107138.38</td>
+<td>New York</td>
+<td>101004.64</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>61994.48</td>
+<td>115641.28</td>
+<td>91131.24</td>
+<td>Florida</td>
+<td>99937.59</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">31</td>
+<td>61136.38</td>
+<td>152701.92</td>
+<td>88218.23</td>
+<td>New York</td>
+<td>97483.56</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>63408.86</td>
+<td>129219.61</td>
+<td>46085.25</td>
+<td>California</td>
+<td>97427.84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33</td>
+<td>55493.95</td>
+<td>103057.49</td>
+<td>214634.81</td>
+<td>Florida</td>
+<td>96778.92</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34</td>
+<td>46426.07</td>
+<td>157693.92</td>
+<td>210797.67</td>
+<td>California</td>
+<td>96712.80</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">35</td>
+<td>46014.02</td>
+<td>85047.44</td>
+<td>205517.64</td>
+<td>New York</td>
+<td>96479.51</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">36</td>
+<td>28663.76</td>
+<td>127056.21</td>
+<td>201126.82</td>
+<td>Florida</td>
+<td>90708.19</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">37</td>
+<td>44069.95</td>
+<td>51283.14</td>
+<td>197029.42</td>
+<td>California</td>
+<td>89949.14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">38</td>
+<td>20229.59</td>
+<td>65947.93</td>
+<td>185265.10</td>
+<td>New York</td>
+<td>81229.06</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">39</td>
+<td>38558.51</td>
+<td>82982.09</td>
+<td>174999.30</td>
+<td>California</td>
+<td>81005.76</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40</td>
+<td>28754.33</td>
+<td>118546.05</td>
+<td>172795.67</td>
+<td>California</td>
+<td>78239.91</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">41</td>
+<td>27892.92</td>
+<td>84710.77</td>
+<td>164470.71</td>
+<td>Florida</td>
+<td>77798.83</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">42</td>
+<td>23640.93</td>
+<td>96189.63</td>
+<td>148001.11</td>
+<td>California</td>
+<td>71498.49</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">43</td>
+<td>15505.73</td>
+<td>127382.30</td>
+<td>35534.17</td>
+<td>New York</td>
+<td>69758.98</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">44</td>
+<td>22177.74</td>
+<td>154806.14</td>
+<td>28334.72</td>
+<td>California</td>
+<td>65200.33</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">45</td>
+<td>1000.23</td>
+<td>124153.04</td>
+<td>1903.93</td>
+<td>New York</td>
+<td>64926.08</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">46</td>
+<td>1315.46</td>
+<td>115816.21</td>
+<td>297114.46</td>
+<td>Florida</td>
+<td>49490.75</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">47</td>
+<td>0.00</td>
+<td>135426.92</td>
+<td>0.00</td>
+<td>California</td>
+<td>42559.73</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">48</td>
+<td>542.05</td>
+<td>51743.15</td>
+<td>0.00</td>
+<td>New York</td>
+<td>35673.41</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49</td>
+<td>0.00</td>
+<td>116983.80</td>
+<td>45173.06</td>
+<td>California</td>
+<td>14681.40</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> dataset2.iloc[:, :<span class="op">-</span><span class="dv">1</span>].values</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> dataset2.iloc[:, <span class="op">-</span><span class="dv">1</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="encoding-categorical-data" class="level4">
+<h4 class="anchored" data-anchor-id="encoding-categorical-data">Encoding categorical data</h4>
+<p>In the dataset, there is a “State” data which consists of three states: New York, California, and Florida. Since a machine learning model only takes numeric data, we need to change this string data into numeric data. Sklearn provides ColumnTransformer and OneHotEncoder libraries to handle this data encoding.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> ColumnTransformer(transformers<span class="op">=</span>[(<span class="st">'encoder'</span>, OneHotEncoder(), [<span class="dv">3</span>])], remainder<span class="op">=</span><span class="st">'passthrough'</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array(ct.fit_transform(X))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[0.0 0.0 1.0 165349.2 136897.8 471784.1]
+ [1.0 0.0 0.0 162597.7 151377.59 443898.53]
+ [0.0 1.0 0.0 153441.51 101145.55 407934.54]
+ [0.0 0.0 1.0 144372.41 118671.85 383199.62]
+ [0.0 1.0 0.0 142107.34 91391.77 366168.42]
+ [0.0 0.0 1.0 131876.9 99814.71 362861.36]
+ [1.0 0.0 0.0 134615.46 147198.87 127716.82]
+ [0.0 1.0 0.0 130298.13 145530.06 323876.68]
+ [0.0 0.0 1.0 120542.52 148718.95 311613.29]
+ [1.0 0.0 0.0 123334.88 108679.17 304981.62]
+ [0.0 1.0 0.0 101913.08 110594.11 229160.95]
+ [1.0 0.0 0.0 100671.96 91790.61 249744.55]
+ [0.0 1.0 0.0 93863.75 127320.38 249839.44]
+ [1.0 0.0 0.0 91992.39 135495.07 252664.93]
+ [0.0 1.0 0.0 119943.24 156547.42 256512.92]
+ [0.0 0.0 1.0 114523.61 122616.84 261776.23]
+ [1.0 0.0 0.0 78013.11 121597.55 264346.06]
+ [0.0 0.0 1.0 94657.16 145077.58 282574.31]
+ [0.0 1.0 0.0 91749.16 114175.79 294919.57]
+ [0.0 0.0 1.0 86419.7 153514.11 0.0]
+ [1.0 0.0 0.0 76253.86 113867.3 298664.47]
+ [0.0 0.0 1.0 78389.47 153773.43 299737.29]
+ [0.0 1.0 0.0 73994.56 122782.75 303319.26]
+ [0.0 1.0 0.0 67532.53 105751.03 304768.73]
+ [0.0 0.0 1.0 77044.01 99281.34 140574.81]
+ [1.0 0.0 0.0 64664.71 139553.16 137962.62]
+ [0.0 1.0 0.0 75328.87 144135.98 134050.07]
+ [0.0 0.0 1.0 72107.6 127864.55 353183.81]
+ [0.0 1.0 0.0 66051.52 182645.56 118148.2]
+ [0.0 0.0 1.0 65605.48 153032.06 107138.38]
+ [0.0 1.0 0.0 61994.48 115641.28 91131.24]
+ [0.0 0.0 1.0 61136.38 152701.92 88218.23]
+ [1.0 0.0 0.0 63408.86 129219.61 46085.25]
+ [0.0 1.0 0.0 55493.95 103057.49 214634.81]
+ [1.0 0.0 0.0 46426.07 157693.92 210797.67]
+ [0.0 0.0 1.0 46014.02 85047.44 205517.64]
+ [0.0 1.0 0.0 28663.76 127056.21 201126.82]
+ [1.0 0.0 0.0 44069.95 51283.14 197029.42]
+ [0.0 0.0 1.0 20229.59 65947.93 185265.1]
+ [1.0 0.0 0.0 38558.51 82982.09 174999.3]
+ [1.0 0.0 0.0 28754.33 118546.05 172795.67]
+ [0.0 1.0 0.0 27892.92 84710.77 164470.71]
+ [1.0 0.0 0.0 23640.93 96189.63 148001.11]
+ [0.0 0.0 1.0 15505.73 127382.3 35534.17]
+ [1.0 0.0 0.0 22177.74 154806.14 28334.72]
+ [0.0 0.0 1.0 1000.23 124153.04 1903.93]
+ [0.0 1.0 0.0 1315.46 115816.21 297114.46]
+ [1.0 0.0 0.0 0.0 135426.92 0.0]
+ [0.0 0.0 1.0 542.05 51743.15 0.0]
+ [1.0 0.0 0.0 0.0 116983.8 45173.06]]</code></pre>
+</div>
+</div>
+<p>As it shown above, each state data is converted into three columns data.</p>
+<p>California is converted into “1.0 0.0 0.0”</p>
+<p>Florida is converted into “0.0 1.0 0.0”</p>
+<p>New York is converted into “0.0 0.0 1.0”</p>
+<p>So that, our ML model can recognize each states information with these numeric data.</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size <span class="op">=</span> <span class="fl">0.2</span>, random_state <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>regressor <span class="op">=</span> LinearRegression()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>regressor.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<style>#sk-container-id-2 {color: black;background-color: white;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked=""><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> regressor.predict(X_test)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.concatenate((y_pred.reshape(<span class="bu">len</span>(y_pred),<span class="dv">1</span>), y_test.reshape(<span class="bu">len</span>(y_test),<span class="dv">1</span>)),<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[103015.2  103282.38]
+ [132582.28 144259.4 ]
+ [132447.74 146121.95]
+ [ 71976.1   77798.83]
+ [178537.48 191050.39]
+ [116161.24 105008.31]
+ [ 67851.69  81229.06]
+ [ 98791.73  97483.56]
+ [113969.44 110352.25]
+ [167921.07 166187.94]]</code></pre>
+</div>
+</div>
+<p>Now, similar with simple linear regression, we can predict our test set with multiple linear regression model.</p>
 </section>
 </section>
 </section>
